@@ -1,0 +1,18 @@
+Ordered Markov enumerator: https://hal.archives-ouvertes.fr/hal-01112124/file/omen.pdf
+
+Measuring password guessability: http://www.blaseur.com/papers/sec15-guessability.pdf
+
+Probabilistic password models: http://www.ieee-security.org/TC/SP2014/papers/AStudyofProbabilisticPasswordModels.pdf
+
+Simulating password cracking: https://www.ece.cmu.edu/~lbauer/papers/2012/oakland2012-guessing.pdf
+
+---
+
+Password guessing models: https://www.cs.utexas.edu/~tansey/passwords.pdf
+
+Empirical Cracking: http://www.eurecom.fr/en/publication/2910/download/rs-publi-2910_1.pdf
+
+Brute force w/ Markov: http://www.m-hikari.com/ams/ams-2014/ams-117-120-2014/vaithyasubramanianAMS117-120-2014.pdf
+
+Password Security w/ Markov: http://passwords12.at.ifi.uio.no/Markus_Duermuth_Password_Security_and_Markov_Models_Passwords12.pdf
+
