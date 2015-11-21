@@ -6,9 +6,10 @@
 # For 08-731 F15
 # Authors: Derek Tzeng (dtzeng), Yiming Zong (yzong)
 
-import json             # For JSON I/O
-import os               # For tilde path
-import math             # For log, round
+import json                             # For JSON I/O
+import os                               # For tilde path
+import math                             # For log, round
+from collections import defaultdict     # Easier index mgmt
 
 # Input statgen file prefix
 STATGEN_PREFIX = os.path.expanduser("~/password-guessability/data/markov_chain_")
@@ -20,7 +21,7 @@ def calc_scaling(stat, prob_levels):
     Calculate the scaling factors C1 and C2
     Goal: ln(c1 * prob_min + c2) = 0; ln(c1 * prob_max + c2) = -prob_levels
     """
-    print("Run One: Calculate scaling factors...")
+    print("Run One: Calculating scaling factors...")
     Transition = stat[0]
     StartCount = stat[1]
 
@@ -47,7 +48,26 @@ def build_invidx(statgen_f, prob_levels):
         stat = json.load(f)
     (c1, c2) = calc_scaling(stat, prob_levels)
 
-    return (c1, c2)
+    print("Run Two: Building inverted index for prefixes\n")
+    Transition = stat[0]
+    StartCount = stat[1]
+    
+    PrefixIdx = defaultdict(lambda: [])
+    prefix_count = sum(StartCount.itervalues())
+    for prefix in StartCount:
+        scaled_p = math.log(c1 * StartCount[prefix] * 1.0 / prefix_count + c2)
+        PrefixIdx[-int(round(scaled_p))].append(prefix)
+
+    print("Run Three: Building inverted index for transitions\n")
+    TransIdx = defaultdict(lambda: defaultdict(lambda: []))
+    for prefix in Transition:
+        prefix_count = sum(Transition[prefix].itervalues())
+        for next_chr in Transition[prefix]:
+            p = Transition[prefix][next_chr] * 1.0 / prefix_count
+            scaled_p = math.log(c1 * p + c2)
+            TransIdx[prefix][-int(round(scaled_p))].append(next_chr)
+
+    return (TransIdx, PrefixIdx)
 
 
 if __name__ == "__main__":
