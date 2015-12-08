@@ -1,0 +1,170 @@
+jimmy@jimmy-Thinkpad-T430:~/password-guessability/code$ for i in `seq 0 20`; do time pypy checkpoint.py 3 additive 6 $i; done;
+This script will enumerate passwords with length 6 and level 0,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_0.out
+Enumerating......
+Checkpointing finished! Total passwords: 0.
+
+real	0m0.183s
+user	0m0.146s
+sys	0m0.037s
+This script will enumerate passwords with length 6 and level 1,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_1.out
+Enumerating......
+Checkpointing finished! Total passwords: 0.
+
+real	0m0.184s
+user	0m0.144s
+sys	0m0.040s
+This script will enumerate passwords with length 6 and level 2,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_2.out
+Enumerating......
+Checkpointing finished! Total passwords: 0.
+
+real	0m0.192s
+user	0m0.155s
+sys	0m0.036s
+This script will enumerate passwords with length 6 and level 3,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_3.out
+Enumerating......
+Checkpointing finished! Total passwords: 6.
+
+real	0m0.187s
+user	0m0.159s
+sys	0m0.029s
+This script will enumerate passwords with length 6 and level 4,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_4.out
+Enumerating......
+Checkpointing finished! Total passwords: 5.
+
+real	0m0.191s
+user	0m0.151s
+sys	0m0.040s
+This script will enumerate passwords with length 6 and level 5,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_5.out
+Enumerating......
+Checkpointing finished! Total passwords: 41.
+
+real	0m0.200s
+user	0m0.164s
+sys	0m0.036s
+This script will enumerate passwords with length 6 and level 6,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_6.out
+Enumerating......
+Checkpointing finished! Total passwords: 300.
+
+real	0m0.242s
+user	0m0.212s
+sys	0m0.028s
+This script will enumerate passwords with length 6 and level 7,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_7.out
+Enumerating......
+Checkpointing finished! Total passwords: 2171.
+
+real	0m0.248s
+user	0m0.199s
+sys	0m0.048s
+This script will enumerate passwords with length 6 and level 8,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_8.out
+Enumerating......
+Checkpointing finished! Total passwords: 13746.
+
+real	0m0.275s
+user	0m0.247s
+sys	0m0.028s
+This script will enumerate passwords with length 6 and level 9,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_9.out
+Enumerating......
+Checkpointing finished! Total passwords: 65416.
+
+real	0m0.311s
+user	0m0.271s
+sys	0m0.040s
+This script will enumerate passwords with length 6 and level 10,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_10.out
+Enumerating......
+Checkpointing finished! Total passwords: 237810.
+
+real	0m0.369s
+user	0m0.348s
+sys	0m0.020s
+This script will enumerate passwords with length 6 and level 11,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_11.out
+Enumerating......
+Checkpointing finished! Total passwords: 678447.
+
+real	0m0.465s
+user	0m0.405s
+sys	0m0.060s
+This script will enumerate passwords with length 6 and level 12,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_12.out
+Enumerating......
+Checkpointing finished! Total passwords: 1579299.
+
+real	0m0.639s
+user	0m0.614s
+sys	0m0.024s
+This script will enumerate passwords with length 6 and level 13,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_13.out
+Enumerating......
+Checkpointing finished! Total passwords: 3102348.
+
+real	0m0.899s
+user	0m0.855s
+sys	0m0.044s
+This script will enumerate passwords with length 6 and level 14,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_14.out
+Enumerating......
+Checkpointing finished! Total passwords: 6014560.
+
+real	0m1.524s
+user	0m1.503s
+sys	0m0.020s
+This script will enumerate passwords with length 6 and level 15,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_15.out
+Enumerating......
+Checkpointing finished! Total passwords: 11813867.
+
+real	0m2.477s
+user	0m2.419s
+sys	0m0.056s
+This script will enumerate passwords with length 6 and level 16,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_16.out
+Enumerating......
+Checkpointing finished! Total passwords: 22288126.
+
+real	0m4.383s
+user	0m4.338s
+sys	0m0.044s
+This script will enumerate passwords with length 6 and level 17,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_17.out
+Enumerating......
+Checkpointing finished! Total passwords: 40079543.
+
+real	0m7.281s
+user	0m7.233s
+sys	0m0.048s
+This script will enumerate passwords with length 6 and level 18,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_18.out
+Enumerating......
+Checkpointing finished! Total passwords: 69576363.
+
+real	0m11.996s
+user	0m11.965s
+sys	0m0.036s
+This script will enumerate passwords with length 6 and level 19,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_19.out
+Enumerating......
+Checkpointing finished! Total passwords: 117081859.
+
+real	0m20.091s
+user	0m20.083s
+sys	0m0.020s
+This script will enumerate passwords with length 6 and level 20,
+Output will be written to /home/jimmy/password-guessability/code/../data/checkpoints/3_additive/6_20.out
+Enumerating......
+Checkpointing finished! Total passwords: 190529231.
+
+real	0m37.394s
+user	0m37.292s
+sys	0m0.048s
+
