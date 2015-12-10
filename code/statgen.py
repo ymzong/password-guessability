@@ -153,6 +153,7 @@ def report_probability(StartCount, MidCount, EndCount, is_smoothed, delta):
         if is_smoothed:
             tmp_dict[pref][""] = delta * 1.0 / new_sum  # Ditto
 
+    # Write to output file
     outfile = os.path.join(
         CURRENT_DIR, "../data/probs/{}_{}_mid.json".format(k, smooth_str))
     print("Writing output to {}...".format(outfile)),
