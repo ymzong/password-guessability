@@ -454,7 +454,7 @@ which solves to $(c_1, c_2) = \left(\frac{1-\exp(-\eta)}{p_{\max}}, \exp(-\eta)\
 
 \par\quad With probability discretization, we may approximate the likelihood of a password by adding up the probability levels just like adding up the individual log-probabilities in the definition of \emph{negative log-likelihood} in Definition \ref{def:nll}. This will make our enumeration routine mentioned below more efficient.
 
-\subsection{Markov Model Enumeration}
+\subsection{Markov Model Enumeration} \label{sect:enumeration}
 \par\quad Before we present our look-up table in the next section, it is sensible to understand the state-of-the-art Markov model enumeration technique discussed in this section, since our final goal is to calculate the guess number based on this enumeration model efficiently.
 
 \par\quad Given the ``level'' data from previous steps, we wish to enumerate passwords such that the total levels of them roughly increase over time -- by doing so, we indeed go over the more likely passwords first. In order to do so, we will reverse-engineer how we calculate the \emph{total level} of a password by splitting the the total into a list of levels that sum up to it, and each of them would represent \emph{starting level}, \emph{transition level}, and \emph{ending level}, depending on its location in the list (similar approach is used in \cite{omen}).
@@ -635,41 +635,169 @@ Based on the decompositions above, we can deduce that password ``passwd'' is gue
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results \& Evaluation} \label{sect:results}
-\par\quad In this section, we present the result of our implementation. We first discuss the overall performance of our code suite, and then break down to individual modules and analyze their benchmarks. Eventually, we verify that our password model is correct by feeding it various passwords and compare the results with common wisdom about password security.
+\par\quad In this section, we present the result of our implementation. We first specify the model parameters and our environment for running the code suite. Then, we break down to individual modules and analyze their benchmarks. Eventually, we verify that our password model is reasonable by feeding it various passwords and compare the results with common wisdoms about password security.
 
-\subsection{Overall Performance}
-\par\quad As a reminder, we will first list the parameters we used in our model: 
+\subsection{Model Parameters \& System Specification}
+\par\quad As chosen in previous sections, following are the parameters used in our model:
+\begin{itemize}
+    \item $k=3$, i.e. size of $k$-grams we are considering;
+    \item $\Sigma = \texttt{letters} \cup \texttt{digits}$, i.e. alphanumeric characters;
+    \item $\delta = 0.01$, i.e. the smoothing pseudocount for Markov model;
+    \item $\mathcal{I}=10,000$, i.e. we create a checkpoint for every $10,000$ password guesses;
+    \item $\eta = 10$, i.e. Markov probability models are discretized to integers between $0$ and $10$ (inclusive);
+    \item $\texttt{max\_len} = 12$, i.e. maximal length of a password;
+    \item $\beta = .5$, i.e. the ``level factor'' used for calculating the complexity metrics from length and level in Section \ref{sect:enumeration};
+    \item Training data $\mathcal{D}$ contains \emph{RockYou-WithCount} and Unix English dictionary.
+\end{itemize}
 
-\subsection{Per-Module Benchmark}
-\par\quad 
+\par\quad Given the parameters above, our Python implementation of the algorithm is run on a server with 16 cores of Intel Xeon E5520 @ 2.27GHz, 24GB RAM, and 4TB storage space. The server runs Ubuntu 14.04 with Pypy 4.0.1 compiled from official source; no external libraries are used.
+
+\subsection{Per-Module Performance}
+\par\quad As mentioned before, our code suite can be divided into the three modules: \emph{training module} for determining Markov probabilities and levels, \emph{checkpointing module} for enumerating password guesses and store checkpoints, and \emph{calculation module} for calculating the guess number of any given password. This section discusses the performance of each of the three modules.
 
 \subsubsection{Training Module}
-\par\quad 
+\par\quad This step consists of two scripts, \texttt{statgen.py} and \texttt{discretization.py}. The former processes input data and calculates Markov probabilities, and the latter convers the raw probability values to integer values between $0$ and $\eta = 10$. Following are the key benchmark metrics we kept track of for the two scripts:
+
+    \begin{table}[!htbp]
+        \begin{minipage}{.5\linewidth}
+            \centering
+            \begin{tabular}{|l|r|}
+                \hline
+                Time Elspsed:                           & \texttt{4min44.392s}                      \\ \hline
+                Peak Memory Usage:                      & \texttt{\textbf{3.625GB}}               \\ \hline
+                CPU Usage:                              & Consistently \texttt{100\%}               \\ \hline
+                Output Size:                            & \texttt{915.0MB}               \\ \hline
+            \end{tabular}
+            \caption{Benchmark for \texttt{statgen.py}}
+        \end{minipage}
+        %
+        \begin{minipage}{.5\linewidth}
+            \centering
+            \begin{tabular}{|l|r|}
+                \hline
+                Time Elspsed:                           & \texttt{2min7.507s}                      \\ \hline
+                Peak Memory Usage:                      & \texttt{\textbf{3.471GB}}               \\ \hline
+                CPU Usage:                              & \texttt{50\% - 100\%}               \\ \hline
+                Output Size:                            & \texttt{713.8MB}               \\ \hline
+            \end{tabular}
+            \caption{Benchmark for \texttt{discretization.py}}
+        \end{minipage}
+    \end{table}
+
+\par\quad From the result above, it is surprising that both routines ran pretty fast, totaling merely \texttt{6min51.899s}. However, the memory usage was large compared to the size of raw dataset (\texttt{256.0MB}), potentially because of Pypy's overhead with built-in lists and dictionaries. Also, CPU and storage usage of the two scripts are reasonable. Therefore, as long as the machine has at least \texttt{8GB} of total memory, \emph{training module} should not be the bottleneck of our code suite.
 
 \subsubsection{Checkpointing Module}
-\par\quad 
+\par\quad This routine takes in parameters \texttt{(length,} \texttt{level)} and enumerates all passwords of length \texttt{length} and level \texttt{level}, creating ``checkpoints'' on the way. The \emph{depth-first search} algorithm we adopted was also used in \cite{probabilistic} and \cite{guessability}, and it is expected to take a lot of CPU time and memory.
+
+\par\quad In our implementation, we ran multiple instances of \texttt{checkpoint} algorithm in parallel since they are independent. The run-time and the size of resulting password list are shown in \emph{Appendix A}, and following are the main takeaways:
+
+\begin{enumerate}
+    \item For a fixed \texttt{length}, the number of generated passwords is at first exponential with respect to \texttt{level}. Then, the growth slows down, and eventually the number of passwords declines. This entire trend is shown in Figure \ref{fig:passnum} below for \texttt{length} between $4$ and $12$. This observation is what we expected since when the total level is too small or too large, there are few ways that individual levels sum up to the total -- meanwhile, the majority of cases happens when the individual password levels are ``moderately large.''
+    
+        \begin{figure}[!htbp]
+        \begin{center}
+            \includegraphics[width=.85\textwidth]{diag/passwd-count.png}
+        \end{center}
+        \vspace{-15pt}
+        \caption{Number of Generated Passwrods for (length,level)-Pairs}
+        \label{fig:passnum}
+        \end{figure}
+    
+    \item For a fixed \texttt{length}, the time required to enumerate cases with a certain password level is exponential with respect to \texttt{level}, as shown in Figure \ref{fig:passtime} below. This can be explained by the fact that there are exponentially many of ways to decompose \texttt{level} into a sequence of $(n-k+2)$ numbers, and our algorithm goes through these decompositions regardless if there exists a password  that matches the pattern.
+
+        \begin{figure}[!htbp]
+        \begin{center}
+            \includegraphics[width=.85\textwidth]{diag/passwd-time.png}
+        \end{center}
+        \vspace{-15pt}
+        \caption{Time Needed to Enumerate (length,level)-Pairs}
+        \label{fig:passtime}
+        \end{figure}
+    
+    \item For a fixed \texttt{length}, the \emph{enumeration throughput}, i.e. number of passwords generated per second, rises steadily up to some level, fluctuates around the peak, and then declines, as shown in Figure \ref{fig:passrate}. In general, the trend makes sense because when \texttt{level} is very low or very high, there aren't many passwords but still many potential cases to go over -- and hence the low throughput at the two extremes. Meanwhile, we are not clear about the reason for fluctuations of enumeration throughput around the peak (e.g. for \texttt{length=6}). Our hypothesis is that the ``\texttt{level=20}'' mark allows more wild-card prefix and transition cases in passwords, thereby generating lots of ``cheap'' guesses by simple iteration through $\Sigma^{k-1}$ and $\Sigma$, respectively.
+    
+        \begin{figure}[!htbp]
+        \begin{center}
+            \includegraphics[width=.85\textwidth]{diag/passwd-speed.png}
+        \end{center}
+        \vspace{-15pt}
+        \caption{Enumeration Throughput for (length,level)-Cases}
+        \vspace{-15pt}
+        \label{fig:passrate}
+        \end{figure}
+\end{enumerate}
+
+\par\quad Overall, we put lots of analysis on this module since this is the core of our algorithm and is also the performance bottleneck. While running this module on our server, the longest time we tolerated was 426 minutes, i.e. more than seven hours. By projection, all cases we did not cover (shown as ``\texttt{-}'' in Appendix A) would take at least $15$ hours to run, and we decided not to wait for those cases as they do not provide any more insights to the performance of this module.
+\par\quad As an ending note, the memory footprint of this module is surprisingly low -- the peak memory for the largest case we covered is capped at 700MB, most of which used to store the actual checkpoints instead of data structures for depth-first search. Thus, the bottleneck for this round is mainly \emph{computational}.
+
 
 \subsubsection{Calculation Module}
-\par\quad 
+\par\quad Given the result of the previous two modules, this module performs a binary search on the checkpoints, resumes depth-first search from the nearest checkpoint, and returns the guess number very quickly. In our experiments, all queries were fulfilled within one second without causing large memory and computational footprint. Instead of focusing on the benchmark of this module, it is more interesting to examine its results.
 
-\subsection{Password Security \& Guess Number}
-\par\quad 
+\par\quad We built a simple command-line interface for the calculator as in Figure \ref{fig:calculator}, and we are able to feed candidate passwords into the calculator and receive immediate feedback on its guess-number. In Table \ref{table:calcresult1}, and Table \ref{table:calcresult2}, we list some sample results from the calculator. The results are reassuring because they confirm the common wisdom about password security -- for example, adding a digit after ``\texttt{secure}'' caused a 40x in guess number; adding random characters after a very common sequence ``\texttt{123456}'' raised the guess number by six orders of magnitude; mixing upper and lower case letters in ``\texttt{banana}'' caused the guess number to increase by more than 2000x; replacing characters in a common phrase ``\texttt{applepie}'' led to a password outside the range of our 249 billion checkpoints.
 
+\par\quad Hence, we have indirectly shown that our resulting password model is working as intended. 
+
+        \begin{figure}[!htbp]
+        \begin{center}
+            \includegraphics[width=.85\textwidth]{diag/calculator.png}
+        \end{center}
+        \vspace{-10pt}
+        \caption{Command-Line Interface for Guess Number Calculator}
+        \label{fig:calculator}
+        \end{figure}
+
+    \begin{table}[!htbp]
+        \begin{minipage}{.5\linewidth}
+            \centering
+            \begin{tabular}{|r|r|}
+                \hline
+                Password:               & Guess Number:                      \\ \hline
+                \texttt{secure}         & \texttt{4,569,198}         \\ \hline
+                \texttt{123456}         & \texttt{1,693}         \\ \hline
+                \texttt{banana}         & \texttt{1,354,764}        \\ \hline
+                \texttt{applepie}       & \texttt{715,258,448}         \\ \hline
+            \end{tabular}
+            
+            \caption{Benchmark for \texttt{statgen.py}}
+            \label{table:calcresult1}
+        \end{minipage}
+        %
+        \begin{minipage}{.5\linewidth}
+            \centering
+            \begin{tabular}{|r|r|}
+                \hline
+                Password:               & Guess Number:                      \\ \hline
+                \texttt{secure1}        & \texttt{183,195,279}         \\ \hline
+                \texttt{123456yzk}      & \texttt{2,439,725,084}         \\ \hline
+                \texttt{baNanA}         & \texttt{3,183,158,806}        \\ \hline
+                \texttt{appl3pi3}       & \texttt{> 249,634,722,056}         \\ \hline
+            \end{tabular}
+            
+            \caption{Benchmark for \texttt{statgen.py}}
+            \label{table:calcresult2}
+        \end{minipage}
+    \end{table}
+   
 \subsection{Computational \& Model Limitations}   \label{sect:limitation}
-\par\quad As shown by previous studies, even though the enumeration method based on Markov chain gives a higher rate of success, it is very resource-intensive compared to the other models \cite{guessability}. In our study, we were able to ``checkpoint'' over $3\times 10^{11}$ passwords in around $35$ hours, and it was infeasible for us to go beyond that since the run-time of checkpoint algorithm rises exponentially against password level (as shown in Table \ref{table:passtime}). Moreover, the computational barrier occurs to our model even for $k=3$. In a more realistic model, a larger value of $k$ is preferred, and thus more computational resources would be necessary.
+\par\quad As shown by previous studies, even though the enumeration method based on Markov chain gives a higher rate of success, it is very resource-intensive compared to the other models \cite{guessability}. In our study, we were able to ``checkpoint'' over $3\times 10^{11}$ passwords in around $35$ hours of single-CPU time, and it was infeasible for us to go beyond that since the run-time of checkpoint algorithm rises exponentially against password level (as shown in Table \ref{table:passtime}). Moreover, such computational barrier occurs to our model even for $k=3$. In a more realistic model, a larger value of $k$ is preferred, and thus more computational resources would be necessary.
 
-\par\quad Also, we picked the alphabet to be \emph{alphanumeric characters} for our model in order to reduce the number of parameters. As a result, the password we are able to test are also limited to alphanumeric cases, which is certainly not ideal for real-world usage. Future password security studies should definitely take into account some, if not all, special characters for maximum password coverage. 
+\par\quad Also, we picked the alphabet for our model to be \emph{alphanumeric characters} in order to reduce the number of parameters. As a result, the password we are able to test are also limited to alphanumeric cases, which is certainly not ideal for real-world usage. Future password security studies should definitely take into account some, if not all, special characters for maximum password coverage. 
 
 \par\quad Eventually, we wish to note that the goal of our implementation is \emph{not} to complete with the performance of professional implementations (like JtR Markov mode), but to gain initial exposure to the field of password security and implement our novel solution based on what we learned from existing literatures and prior algorithm knowledge. Therefore, the guess efficiency of our model might be worse than that of JtR Markov mode, but our design and implementation of the look-up table is completely novel (to the best of our knowledge).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Summary of Findings}
-\par\quad In this project, we designed and implemented an efficient Markov-based look-up table that returns the \emph{guess number} of a password very efficiently. While the result itself is interesting enough, we also want to point out several key takeaways:
+\section{Summary of Findings \& Generalization}
+\par\quad In this project, we designed and implemented an efficient Markov-based look-up table that returns the \emph{guess number} of any password very efficiently. Overall, the performance of our model exceeds that of any state-of-the-art Markov enumeration methods, and we validated that the heuristic we chose is reasonable. Meanwhile, there are several key takeaways from our study that we like to mention, as follows:
 \begin{itemize}
-    \item Time-Space Tradeoff: 
-    \item Discretization:
-    \item Usable Security:
-    \item Potential Applications:
+    \item Time-Space Tradeoff: The key philosophy of our algorithm is based on \emph{time-space tradeoff}, originally proposed in \cite{timespace} in the field of password security. The idea is to reduce the run-time of an algorithm by using more storage space. Our project is the first known effort in applying time-space tradeoff to ordered Markov enumerators in order to support efficient guess number calculation.
+    \vskip 2pt
+    \par While designing our algorithm, we noticed that probabilistic models for passwords tend to have a huge number of states and parameters in general, and it would almost always help if some \emph{pre-processing work} (e.g. \emph{Checkpointing module} in our case) is done to reduce \emph{repeated work}. For example, in our checkpointing algorithm, we traverse the password search tree (Figure \ref{fig:checkpoint}) \emph{only once} and save checkpoints on the hard drive for later use. Similar approach can be used for PCFG and even word-mangling rule for efficient guess-number calculation.
+    
+    \item Discretization: Another efficient measure that reduces the complexity of our algorithm is \emph{discretization}, by which we approximate continuous variables with discrete states in order to allow easier optimization, traversal, and calculation. We discovered that discretization is key to the viablity of our algorithm, as it is practically impossible to keep track of trillions of accurate password probabilities. For future research on probabilistic password models, discretization can be an invaluable asset in reducing the problem state by sacrificing some accuracy.
+    
+    \item Bottleneck Analysis \& Parallelism: Since we already predicted that Markov enumeration algorithms use significant resources, we studied which types of resources are the bottlenecks at each step. We concluded that in the training phase, the bottleneck was memory, which needs to store the $k$-gram statistics and probability values; in the checkpointing phase, the bottleneck was CPU time since performing depth-first search on the huge password tree involves a huge amount of work. And, the latter observation prompted us to look into parallelization techniques available for our algorithm, and we achieved 10x speedup by using parallelism.
+
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -703,7 +831,7 @@ $$\hat{c}(s) = \begin{cases}
 $$
 where the last case above simply means to uniformly distribute the deducted count values to unobserved passwords in the universe $\Sigma^L$. After adjusting the counts, the \emph{(password, count)} pairs are then passed to \texttt{statgen} (Algorithm \ref{algo:statgen}) and then to \texttt{probgen} (Algorithm \ref{algo:probgen}) with $\delta = 0$ (i.e. no additive smoothing applied).
 
-\par\quad As an ending note on the \emph{training dataset} for our model, we only included RockYou database and Unix English dictionary as noted in \ref{sect:data-analysis}. While they constitute a satisfactory training set, more weighted training sets can be used to improve the accuracy of our model.
+\par\quad As an ending note on the \emph{training dataset} for our model, we only included RockYou database and Unix English dictionary as noted in \ref{sect:data-analysis}. While they constitute a satisfactory training set, more weighted training sets can be used to improve the accuracy of our model. Also, a larger value of $k$ ($4$ or $5$) will likely result in a more efficient guessing model according to \cite{probabilistic}.
 
 \subsection{Password Strength Meter / Guessability-as-a-Service}
 \par\quad Given our efficient algorithm for calculating guess numbers, we believe it can be an useful addition to existing password meters (e.g. Google checker). After enforcing the character composition rules for screening purposes, the password checker may feed the password to our algorithm and estimate its strength based on its guess number. With proper tuning of the underlying Markov model (as in previous section) and our efficient algorithm, Markov-based password checkers have the potential to become the new mainstream methodology. Similarly, our algorithm may also be used to complement existing Markov enumeration methods in password guessability services (such as \cite{cmu-guessability}) to speed up the calculation.

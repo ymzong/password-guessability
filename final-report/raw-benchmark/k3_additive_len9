@@ -1,186 +1,186 @@
-> for i in `seq 0 22`; do time ~/pypy-4.0.1-linux_x86_64-portable/bin/pypy checkpoint.py 3 additive 9 $i; done;
+> for i in `seq 0 24`; do time ~/pypy-4.0.1-linux_x86_64-portable/bin/pypy checkpoint.py 3 additive 9 $i; done;
 This script will enumerate passwords with length 9 and level 0,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_0.out
 Enumerating......
 Checkpointing finished! Total passwords: 0.
 
-real	0m0.321s
-user	0m0.254s
-sys	0m0.052s
+real	0m0.277s
+user	0m0.214s
+sys	0m0.055s
 This script will enumerate passwords with length 9 and level 1,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_1.out
 Enumerating......
 Checkpointing finished! Total passwords: 0.
 
-real	0m0.341s
-user	0m0.268s
-sys	0m0.068s
+real	0m0.225s
+user	0m0.165s
+sys	0m0.048s
 This script will enumerate passwords with length 9 and level 2,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_2.out
 Enumerating......
 Checkpointing finished! Total passwords: 0.
 
-real	0m0.317s
-user	0m0.242s
-sys	0m0.065s
+real	0m0.245s
+user	0m0.221s
+sys	0m0.024s
 This script will enumerate passwords with length 9 and level 3,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_3.out
 Enumerating......
 Checkpointing finished! Total passwords: 1.
 
-real	0m0.317s
-user	0m0.246s
-sys	0m0.061s
+real	0m0.340s
+user	0m0.286s
+sys	0m0.036s
 This script will enumerate passwords with length 9 and level 4,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_4.out
 Enumerating......
 Checkpointing finished! Total passwords: 0.
 
-real	0m0.325s
-user	0m0.247s
-sys	0m0.068s
+real	0m0.271s
+user	0m0.211s
+sys	0m0.060s
 This script will enumerate passwords with length 9 and level 5,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_5.out
 Enumerating......
-Checkpointing finished! Total passwords: 18.
+Checkpointing finished! Total passwords: 31.
 
-real	0m0.308s
-user	0m0.226s
-sys	0m0.056s
+real	0m0.276s
+user	0m0.229s
+sys	0m0.037s
 This script will enumerate passwords with length 9 and level 6,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_6.out
 Enumerating......
-Checkpointing finished! Total passwords: 127.
+Checkpointing finished! Total passwords: 174.
 
-real	0m0.367s
-user	0m0.305s
-sys	0m0.053s
+real	0m0.310s
+user	0m0.267s
+sys	0m0.036s
 This script will enumerate passwords with length 9 and level 7,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_7.out
 Enumerating......
-Checkpointing finished! Total passwords: 629.
+Checkpointing finished! Total passwords: 879.
 
-real	0m0.417s
-user	0m0.353s
-sys	0m0.060s
+real	0m0.337s
+user	0m0.292s
+sys	0m0.048s
 This script will enumerate passwords with length 9 and level 8,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_8.out
 Enumerating......
-Checkpointing finished! Total passwords: 1047.
+Checkpointing finished! Total passwords: 1894.
 
-real	0m0.475s
-user	0m0.411s
-sys	0m0.056s
+real	0m0.472s
+user	0m0.432s
+sys	0m0.028s
 This script will enumerate passwords with length 9 and level 9,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_9.out
 Enumerating......
-Checkpointing finished! Total passwords: 3626.
+Checkpointing finished! Total passwords: 6777.
 
-real	0m0.556s
-user	0m0.489s
-sys	0m0.060s
+real	0m0.634s
+user	0m0.572s
+sys	0m0.056s
 This script will enumerate passwords with length 9 and level 10,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_10.out
 Enumerating......
-Checkpointing finished! Total passwords: 14600.
+Checkpointing finished! Total passwords: 24952.
 
-real	0m0.593s
-user	0m0.545s
-sys	0m0.040s
+real	0m1.143s
+user	0m1.075s
+sys	0m0.060s
 This script will enumerate passwords with length 9 and level 11,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_11.out
 Enumerating......
-Checkpointing finished! Total passwords: 55037.
+Checkpointing finished! Total passwords: 87282.
 
-real	0m0.973s
-user	0m0.914s
-sys	0m0.048s
+real	0m2.107s
+user	0m2.058s
+sys	0m0.044s
 This script will enumerate passwords with length 9 and level 12,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_12.out
 Enumerating......
-Checkpointing finished! Total passwords: 258219.
+Checkpointing finished! Total passwords: 359444.
 
-real	0m1.691s
-user	0m1.622s
+real	0m4.013s
+user	0m3.955s
 sys	0m0.048s
 This script will enumerate passwords with length 9 and level 13,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_13.out
 Enumerating......
-Checkpointing finished! Total passwords: 1317643.
+Checkpointing finished! Total passwords: 1608764.
 
-real	0m5.053s
-user	0m4.956s
+real	0m9.677s
+user	0m9.594s
 sys	0m0.076s
 This script will enumerate passwords with length 9 and level 14,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_14.out
 Enumerating......
-Checkpointing finished! Total passwords: 6517885.
+Checkpointing finished! Total passwords: 7328242.
 
-real	0m8.680s
-user	0m8.564s
-sys	0m0.108s
+real	0m26.163s
+user	0m26.040s
+sys	0m0.104s
 This script will enumerate passwords with length 9 and level 15,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_15.out
 Enumerating......
-Checkpointing finished! Total passwords: 28595101.
+Checkpointing finished! Total passwords: 30631783.
 
-real	0m19.944s
-user	0m19.830s
-sys	0m0.108s
+real	1m7.558s
+user	1m7.380s
+sys	0m0.120s
 This script will enumerate passwords with length 9 and level 16,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_16.out
 Enumerating......
-Checkpointing finished! Total passwords: 107588634.
+Checkpointing finished! Total passwords: 112288927.
 
-real	1m0.143s
-user	0m59.750s
-sys	0m0.368s
+real	2m55.354s
+user	2m54.900s
+sys	0m0.448s
 This script will enumerate passwords with length 9 and level 17,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_17.out
 Enumerating......
-Checkpointing finished! Total passwords: 341513568.
+Checkpointing finished! Total passwords: 351289423.
 
-real	2m29.677s
-user	2m29.094s
-sys	0m0.552s
+real	6m6.055s
+user	6m5.129s
+sys	0m0.956s
 This script will enumerate passwords with length 9 and level 18,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_18.out
 Enumerating......
-Checkpointing finished! Total passwords: 919624028.
+Checkpointing finished! Total passwords: 939203528.
 
-real	6m41.083s
-user	6m40.788s
-sys	0m0.268s
+real	12m46.142s
+user	12m45.072s
+sys	0m1.112s
 This script will enumerate passwords with length 9 and level 19,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_19.out
 Enumerating......
-Checkpointing finished! Total passwords: 2162192934.
+Checkpointing finished! Total passwords: 2201509486.
 
-real	15m29.528s
-user	15m26.820s
-sys	0m2.704s
+real	26m51.188s
+user	26m48.262s
+sys	0m2.984s
 This script will enumerate passwords with length 9 and level 20,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_20.out
 Enumerating......
-Checkpointing finished! Total passwords: 4776899788.
+Checkpointing finished! Total passwords: 4854945013.
 
-real	30m34.051s
-user	30m29.200s
-sys	0m4.780s
+real	56m55.179s
+user	56m46.763s
+sys	0m7.619s
 This script will enumerate passwords with length 9 and level 21,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_21.out
 Enumerating......
-Checkpointing finished! Total passwords: 10371627032.
+Checkpointing finished! Total passwords: 10525767778.
 
-real	61m11.580s
-user	61m2.851s
-sys	0m8.824s
+real	117m14.942s
+user	116m56.922s
+sys	0m16.576s
 This script will enumerate passwords with length 9 and level 22,
 Output will be written to /home/yzong/pg/code/../data/checkpoints/3_additive/9_22.out
 Enumerating......
-Checkpointing finished! Total passwords: 21994172405.
+Checkpointing finished! Total passwords: 22310905515.
 
-real	107m55.711s
-user	107m42.056s
-sys	0m13.917s
+real	305m52.786s
+user	305m5.417s
+sys	0m35.065s
 
