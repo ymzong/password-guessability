@@ -116,6 +116,7 @@ def dfs_passwords(l, k, next_idx, passwd, remaining_lvl):
                 GUESS_COUNT += 1
                 if GUESS_COUNT % UPDATE_FREQUENCY == 0:
                     CHECKPOINT.append(passwd + c)
+            return
         elif remaining_lvl not in mid_lvl[suffix]:
             return  # Ehh, bad case
         for next_chr in mid_lvl[suffix][remaining_lvl]:

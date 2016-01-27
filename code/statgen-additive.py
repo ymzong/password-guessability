@@ -1,4 +1,4 @@
-# Higher-order Markov Model Stat Generator
+# Higher-order Markov Model Stat Generator with Additive Smoothing
 #
 # Input: Sanitized password file with count:
 #        - first line is the (0-)index of delimiter
@@ -23,9 +23,9 @@ CURRENT_DIR = os.path.dirname(os.path.realpath('__file__'))
 # Input password file
 PASSWD_FILE = os.path.join(CURRENT_DIR, "../data/input/dataset-ascii.csv")
 # Number of passwords between updating to stdout
-UPDATE_INTERVAL = 1200000
+UPDATE_INTERVAL = 1500000
 # Valid chars in password
-ALPHABET = string.digits + string.ascii_letters
+ALPHABET = string.digits + string.ascii_letters + "~`!@#$%^&*()_-+={[}]|\:;\"'<,>.?/ "
 ALPHABET_SIZE = len(ALPHABET)
 
 # Smoothing constant
@@ -35,7 +35,6 @@ SMOOTH_DELTA = 0.01
 K_GRAM_RANGE = xrange(2,  # lowest k
                       5 + 1,  # highest k + 1
                       )
-
 
 def file_len(fname):
     """
